@@ -1,9 +1,8 @@
-# ナビゲーター起動用プロンプト（全フェーズ）
+# ナビゲーター起動用プロンプト（インセプションフェーズ）
 
 ## 使い方
 
 Claude Codeを起動したら、以下のプロンプトをそのまま入力してください。
-インセプション〜コンストラクションを通しで進めたい場合に使用します。
 
 ---
 
@@ -29,6 +28,18 @@ C:\Users\%USERNAME%\soft_dev_prompt\00_README.md
 
 ---
 
+## 対象フェーズ
+
+| フェーズ | 内容 | 参照ファイル |
+|---|---|---|
+| Phase 0 | 要件の具体化・明確化 | `00_grill_me.md` |
+| Phase 1 | ユーザーストーリー作成 | `01_generate_user_stories_plan.md` |
+| Phase 1b | 整合性チェック | `01b_check_user_stories_consistency.md` |
+| Phase 2 | 画面モック作成 | `02_generate_screen_mock.md` |
+| Phase 3 | Unit of Work 分割 | `03_generate_unit_of_work.md` |
+
+---
+
 ## 運用メモ
 
-> ✅ **フェーズごとにナビゲーターを分けたい場合は `navigator_inception.md` / `navigator_construction.md` を使う**
+> ✅ **インセプション完了後は `navigator_construction.md` のプロンプトで新しいセッションを開始する**
