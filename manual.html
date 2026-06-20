@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ソフトウェア開発プロンプト集 — 使い方マニュアル</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+
+  :root {
+    --indigo: #3730a3;
+    --indigo-light: #e0e7ff;
+    --indigo-dark: #1e1b4b;
+    --slate: #1e293b;
+    --slate-mid: #475569;
+    --smoke: #f1f5f9;
+    --smoke-dark: #e2e8f0;
+    --white: #ffffff;
+    --green: #166534;
+    --green-light: #dcfce7;
+    --red: #991b1b;
+    --red-light: #fee2e2;
+    --amber: #92400e;
+    --amber-light: #fef3c7;
+    --sky: #0c4a6e;
+    --sky-light: #e0f2fe;
+    --serif: 'Noto Serif JP', serif;
+    --sans: 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--smoke);
+    color: var(--slate);
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  .site-header {
+    background: var(--indigo-dark);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    border-bottom: 3px solid var(--indigo);
+  }
+  .header-eyebrow { font-size: 11px; letter-spacing: 0.2em; color: #a5b4fc; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .header-title { font-family: var(--serif); font-size: 2rem; color: var(--white); font-weight: 700; line-height: 1.4; margin-bottom: 0.75rem; }
+  .header-sub { font-size: 13px; color: #94a3b8; letter-spacing: 0.05em; }
+
+  .nav-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--smoke-dark);
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-tab {
+    padding: 1rem 1.25rem;
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .nav-tab:hover { color: var(--slate); }
+  .nav-tab.active { color: var(--indigo); border-bottom-color: var(--indigo); }
+
+  .content { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  h2 { font-family: var(--serif); font-size: 1.4rem; color: var(--indigo-dark); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--indigo-light); }
+  h3 { font-size: 1rem; font-weight: 700; color: var(--slate); margin: 1.75rem 0 0.75rem; }
+  p { margin-bottom: 1rem; color: var(--slate-mid); font-size: 14px; line-height: 1.9; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { font-size: 14px; color: var(--slate-mid); margin-bottom: 0.35rem; line-height: 1.8; }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 13px; }
+  th { background: var(--indigo-dark); color: var(--white); padding: 10px 14px; text-align: left; font-weight: 600; letter-spacing: 0.03em; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--smoke-dark); color: var(--slate-mid); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--smoke); }
+  tr:hover td { background: var(--indigo-light); }
+
+  pre { background: var(--slate); color: #e2e8f0; padding: 1.25rem 1.5rem; border-radius: 8px; font-size: 12.5px; line-height: 1.7; overflow-x: auto; margin-bottom: 1.25rem; }
+  code { font-family: 'Courier New', monospace; background: var(--indigo-light); color: var(--indigo); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; }
+  pre code { background: none; color: inherit; padding: 0; }
+
+  .alert { border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; font-size: 14px; }
+  .alert-green { background: var(--green-light); border-left: 4px solid #16a34a; }
+  .alert-red { background: var(--red-light); border-left: 4px solid #dc2626; }
+  .alert-amber { background: var(--amber-light); border-left: 4px solid #d97706; }
+  .alert-sky { background: var(--sky-light); border-left: 4px solid #0284c7; }
+  .alert-title { font-weight: 700; margin-bottom: 0.4rem; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .alert-green .alert-title { color: var(--green); }
+  .alert-red .alert-title { color: var(--red); }
+  .alert-amber .alert-title { color: var(--amber); }
+  .alert-sky .alert-title { color: var(--sky); }
+  .alert p { margin-bottom: 0; }
+
+  .phase-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem; }
+  .phase-card { background: var(--white); border: 1px solid var(--smoke-dark); border-radius: 10px; padding: 1.1rem 1.4rem; display: flex; align-items: flex-start; gap: 1rem; }
+  .phase-num { width: 36px; height: 36px; border-radius: 50%; background: var(--indigo); color: var(--white); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .phase-num.sub { background: #6366f1; font-size: 11px; }
+  .phase-num.construction { background: #0891b2; }
+  .phase-body { flex: 1; }
+  .phase-title { font-weight: 700; font-size: 14px; color: var(--slate); margin-bottom: 2px; }
+  .phase-desc { font-size: 13px; color: var(--slate-mid); line-height: 1.6; }
+  .phase-file { font-family: monospace; font-size: 11px; color: #6366f1; background: var(--indigo-light); padding: 2px 7px; border-radius: 4px; margin-top: 5px; display: inline-block; }
+  .phase-clear { font-size: 11px; color: #64748b; margin-top: 5px; }
+  .phase-clear::before { content: "🔄 "; }
+
+  .navi-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 1.5rem; }
+  .navi-card { background: var(--white); border: 1px solid var(--smoke-dark); border-radius: 10px; padding: 1.25rem; text-align: center; }
+  .navi-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .navi-title { font-weight: 700; font-size: 14px; color: var(--slate); margin-bottom: 4px; }
+  .navi-range { font-size: 12px; color: var(--slate-mid); margin-bottom: 6px; }
+  .navi-file { font-family: monospace; font-size: 11px; color: #6366f1; background: var(--indigo-light); padding: 2px 8px; border-radius: 4px; }
+
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .feature-card { background: var(--white); border: 1px solid var(--smoke-dark); border-radius: 10px; padding: 1.1rem 1.3rem; }
+  .feature-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--indigo); margin-bottom: 6px; }
+  .feature-desc { font-size: 13px; color: var(--slate-mid); line-height: 1.7; }
+
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: #94a3b8; border-top: 1px solid var(--smoke-dark); margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-eyebrow">Software Development Prompt Collection Manual</div>
+  <div class="header-title">ソフトウェア開発プロンプト集<br>使い方マニュアル</div>
+  <div class="header-sub">ユーザーストーリー作成からドメインモデリングまで、AIと協働で設計を進めるためのプロンプト集</div>
+</header>
+
+<nav class="nav-wrap">
+  <div class="nav-tab active" onclick="showPanel('overview')">概要</div>
+  <div class="nav-tab" onclick="showPanel('flow')">開発フロー</div>
+  <div class="nav-tab" onclick="showPanel('navigator')">ナビゲーター</div>
+  <div class="nav-tab" onclick="showPanel('features')">主な特徴</div>
+  <div class="nav-tab" onclick="showPanel('phases')">フェーズ詳細</div>
+  <div class="nav-tab" onclick="showPanel('variables')">共通変数</div>
+  <div class="nav-tab" onclick="showPanel('tips')">運用のコツ</div>
+  <div class="nav-tab" onclick="showPanel('files')">ファイル一覧</div>
+</nav>
+
+<div class="content">
+
+<!-- 概要 -->
+<div id="panel-overview" class="panel active">
+  <h2>概要</h2>
+  <p>このプロンプト集は、ソフトウェア開発をAIと協働で進めるための仕組みです。Phase 1（ユーザーストーリー作成）からPhase 6（ドメインモデリング）までの全工程をカバーし、ナビゲーターが毎回適切なフェーズへ誘導します。</p>
+
+  <div class="alert alert-sky">
+    <div class="alert-title">🔍 このプロンプト集の強み</div>
+    <p>基本プロンプトをベースに、<strong>手戻り防止・品質向上・知見の蓄積</strong>の3軸で大幅に強化しています。</p>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-label">💾 中間成果物の保存</div>
+      <div class="feature-desc">各ステップ完了ごとにファイル保存。どのフェーズからでも再開可能。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">🎭 アクターレビュー（Phase 1c）</div>
+      <div class="feature-desc">Phase 1 で定義したアクター自身の視点で行動の自然さ・目的・抜け漏れを確認。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">👥 専門家ペルソナレビュー（Phase 1d）</div>
+      <div class="feature-desc">PM・UX・技術・法務・マーケターから使うペルソナを選択可。スキップも可能。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">📋 インセプションサマリー</div>
+      <div class="feature-desc">セッションクリア前にナビゲーターが inception_summary.md を生成。Phase 2 以降への引き継ぎを一元管理。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">🔗 I/F 手戻り防止</div>
+      <div class="feature-desc">Phase 3〜6 にわたる if_precheck 連鎖でI/F設計の合意を事前形成。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">📝 ナレッジログ</div>
+      <div class="feature-desc">各フェーズ完了時に knowledge_log.md へ再利用可能な知見を自動蓄積。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">🛑 歯止めルール</div>
+      <div class="feature-desc">1ステップごとに停止・承認待ち。AIのオーバーワーク・先読みを防止。</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-label">❓ 強化版 Question</div>
+      <div class="feature-desc">問い・背景・選択肢・影響を必ず明示。判断しやすい質問フォーマット。</div>
+    </div>
+  </div>
+
+  <h3>全体の構成</h3>
+  <table>
+    <tr><th>ファイル</th><th>種別</th><th>内容</th></tr>
+    <tr><td><code>00_README.md</code></td><td>ガイド</td><td>全体フロー・成果物マップ・ルール一覧</td></tr>
+    <tr><td><code>knowledge.md</code></td><td>ナレッジ</td><td>運用で得た知見・注意事項まとめ</td></tr>
+    <tr><td><code>01_generate_user_stories_plan.md</code></td><td>Phase 1</td><td>ユーザーストーリー作成（粒度A/B/C選択）</td></tr>
+    <tr><td><code>01b_check_user_stories_consistency.md</code></td><td>Phase 1b</td><td>整合性チェック（AC評価・粒度確認・申し送り）</td></tr>
+    <tr><td><code>01c_actor_review.md</code></td><td>Phase 1c</td><td>アクターレビュー</td></tr>
+    <tr><td><code>01d_multi_perspective_review.md</code></td><td>Phase 1d ★オプション</td><td>専門家ペルソナレビュー（ペルソナ選択可・スキップ可）</td></tr>
+    <tr><td><code>02_generate_screen_mock.md</code></td><td>Phase 2</td><td>画面モック作成（作成物種類・粒度・フロー選択）</td></tr>
+    <tr><td><code>03_generate_unit_of_work.md</code></td><td>Phase 3</td><td>Unit of Work 分割（ユニット概要・I/F確認2段階）</td></tr>
+    <tr><td><code>04_generate_context_map.md</code></td><td>Phase 4</td><td>コンテキストマップ作成（連携一覧テーブル・依存関係確認）</td></tr>
+    <tr><td><code>05_generate_pact.md</code></td><td>Phase 5</td><td>PACT 定義（着手順序提案・I/F確認→PACT定義2段階）</td></tr>
+    <tr><td><code>06_generate_domain_model.md</code></td><td>Phase 6</td><td>ドメインモデリング（I/F確認→計画→定義の3段階）</td></tr>
+    <tr><td><code>navigator_inception.md</code></td><td>ナビゲーター</td><td>Phase 1〜3 起動プロンプト（移行チェックリスト付き）</td></tr>
+    <tr><td><code>navigator_construction.md</code></td><td>ナビゲーター</td><td>Phase 4〜6 起動プロンプト（移行チェックリスト付き）</td></tr>
+    <tr><td><code>navigator_prompt.md</code></td><td>ナビゲーター</td><td>全フェーズ通し起動プロンプト</td></tr>
+  </table>
+</div>
+
+<!-- 開発フロー -->
+<div id="panel-flow" class="panel">
+  <h2>開発フロー</h2>
+  <p>Phase 1 から順番に進めます。各フェーズの成果物をファイルに保存してから、セッションをクリアして次のフェーズへ進んでください。</p>
+
+  <div class="alert alert-amber">
+    <div class="alert-title">⚠️ セッションクリアのタイミング</div>
+    <p>各フェーズ完了後、成果物を保存してからセッションをクリアしてください。<strong>Phase 1・1b・1c は同一セッション</strong>で実施します。Phase 1d はオプション（スキップ可）。セッションクリア前にナビゲーターが <code>inception_summary.md</code> を生成してから Phase 2 へ進みます。</p>
+  </div>
+
+  <div class="phase-list">
+    <div class="phase-card">
+      <div class="phase-num">1</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 1 — ユーザーストーリー作成</div>
+        <div class="phase-desc">熟練PMの役割で7ステップのユーザーストーリーを作成。ST4開始前にエピック数・想定ストーリー数を提示し、レビュー粒度（[A]エピック単位 / [B]ストーリー単位 / [C]一括）をAIが推奨・ユーザーが選択。</div>
+        <div class="phase-file">01_generate_user_stories_plan.md</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num sub">1b</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 1b — 整合性チェック</div>
+        <div class="phase-desc">同一セッションで実施。問題をカテゴリ別（矛盾・用語・AC品質・AC粒度・網羅性・申し送り）に一覧提示。AC粒度の問題はSTEP 2.5で具体化案を複数提示。後工程への申し送りは <code>phase1b_handover.md</code> に保存。</div>
+        <div class="phase-file">01b_check_user_stories_consistency.md</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num sub">1c</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 1c — アクターレビュー ★新設</div>
+        <div class="phase-desc">Phase 1 ST2 で定義したアクターを1人ずつ「行動の自然さ・目的との対応・抜け漏れ」の3観点でレビュー。全アクター完了後にサマリーを保存。</div>
+        <div class="phase-file">01c_actor_review.md</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num sub">1d</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 1d — 専門家ペルソナレビュー ★オプション</div>
+        <div class="phase-desc">起動時に5ペルソナの概要を提示し使用するペルソナを選択。「スキップ」でフェーズ全体をスキップして Phase 2 へ進める。全Question回答後にセッションクリア前に inception_summary.md を生成。</div>
+        <div class="phase-file">01d_multi_perspective_review.md</div>
+        <div class="phase-clear">セッションクリア前に inception_summary.md を生成 → セッションクリア</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">2</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 2 — 画面モック作成</div>
+        <div class="phase-desc">STEP 0 で作成物の種類（WEBアプリ/エージェント/その他）・粒度（ワイヤーフレーム/動くモック）・作業順序（フローチャート先行/直接作成）を選択。フローチャート先行時はSTEP 1aで網羅性確認、STEP 1bで未決事項を精査。<code>inception_summary.md</code> を参照して引き継ぎ事項を反映。</div>
+        <div class="phase-file">02_generate_screen_mock.md</div>
+        <div class="phase-clear">セッションクリア</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">3</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 3 — Unit of Work 分割</div>
+        <div class="phase-desc">STEP 0 で前工程成果物（inception_summary / actor_review / screen_flow）の影響を確認してから計画作成。各ユニットは概要（目的・主な責務・境界の根拠・他ユニットとの連携）を先に承認してからストーリー定義。I/F事前確認はSTEP A/Bの2段階で実施。</div>
+        <div class="phase-file">03_generate_unit_of_work.md</div>
+        <div class="phase-clear">セッションクリア（if_precheck.md の全 Question 回答済み後）→ Construction へ</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num construction">4</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 4 — コンテキストマップ作成</div>
+        <div class="phase-desc">STEP 1でコンテキストマップ＋連携一覧テーブル、STEP 2でシーケンス図、STEP 3でI/F事前確認を2段階で実施。STEP 1の整合性確認でPACT定義間の依存関係（パターンA/B/C）を識別。</div>
+        <div class="phase-file">04_generate_context_map.md</div>
+        <div class="phase-clear">セッションクリア（if_precheck_p4.md の全 Question 回答済み後）</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num construction">5</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 5 — PACT 定義</div>
+        <div class="phase-desc">計画作成時に着手順序をAIが提案（未解決事項なし優先・共有ユニット連続着手）。各連携はSTEP A（I/F確認一覧）→STEP B（PACT定義）の2段階。STEP Bの整合性確認でユニットの主な責務の範囲内かを確認。</div>
+        <div class="phase-file">05_generate_pact.md</div>
+        <div class="phase-clear">セッションクリア（pact_index.md の未解決 Question がゼロになった後）</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num construction">6</div>
+      <div class="phase-body">
+        <div class="phase-title">Phase 6 — ドメインモデリング</div>
+        <div class="phase-desc">STEP A（I/F確認）→STEP B（計画）→STEP C（コンポーネント定義）の3段階。関連する全PACTファイルを参照。ACL担当コンポーネントの明示を計画・定義の両段階で確認。ユニットごとに繰り返し実行。</div>
+        <div class="phase-file">06_generate_domain_model.md</div>
+        <div class="phase-clear">ユニットごとにセッションクリア</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ナビゲーター -->
+<div id="panel-navigator" class="panel">
+  <h2>ナビゲーターの使い方</h2>
+  <p>ナビゲーターはフェーズの進行を管理するプロンプトです。新しいセッションを開始するたびに、以下のいずれかをClaude Codeに入力してください。</p>
+
+  <div class="navi-cards">
+    <div class="navi-card">
+      <div class="navi-icon">🚀</div>
+      <div class="navi-title">インセプション用</div>
+      <div class="navi-range">Phase 1 〜 3</div>
+      <div class="navi-file">navigator_inception.md</div>
+    </div>
+    <div class="navi-card">
+      <div class="navi-icon">🔨</div>
+      <div class="navi-title">コンストラクション用</div>
+      <div class="navi-range">Phase 4 〜 6</div>
+      <div class="navi-file">navigator_construction.md</div>
+    </div>
+    <div class="navi-card">
+      <div class="navi-icon">🗺️</div>
+      <div class="navi-title">全フェーズ通し</div>
+      <div class="navi-range">Phase 1 〜 6</div>
+      <div class="navi-file">navigator_prompt.md</div>
+    </div>
+  </div>
+
+  <h3>ナビゲーターへの入力例（インセプション）</h3>
+  <pre><code>以下のファイルを順番に読み込んでください。
+
+1. C:\Users\%USERNAME%\soft_dev_prompt\knowledge.md
+2. C:\Users\%USERNAME%\soft_dev_prompt\00_README.md
+
+読み込んだ内容をもとにナビゲーターとして動いてください。</code></pre>
+
+  <h3>ナビゲーターの役割</h3>
+  <ul>
+    <li>現在のフェーズを把握し、次のアクションを案内する</li>
+    <li>各フェーズの移行前に<strong>フェーズ移行チェックリスト</strong>を提示してユーザーに確認させる</li>
+    <li>Phase 1 ST4 開始前にレビュー粒度（A/B/C）を推奨とともに提案する</li>
+    <li>Phase 1d の開始時に5ペルソナの概要を提示し使用するペルソナを選ばせる（スキップ可）</li>
+    <li>セッションクリア前に <code>inception_summary.md</code> を生成して保存する</li>
+    <li>各フェーズの md ファイルを自動で読み込んで使用する</li>
+    <li>Question が発生したら強化版フォーマット（問い・背景・選択肢・影響）で記載する</li>
+    <li>各フェーズ完了時に knowledge_log.md への追記を案内する</li>
+    <li>独自判断をせず、不明点は必ず確認する</li>
+  </ul>
+
+  <div class="alert alert-green">
+    <div class="alert-title">✅ セッション切り替えのタイミング</div>
+    <p>Phase 1 → 1b → 1c は同一セッション。Phase 1d（オプション）完了またはスキップ後、セッションクリア前に <code>inception_summary.md</code> を生成してから Phase 2 へ。Phase 4→5→6 はコンストラクションナビゲーターを使用。</p>
+  </div>
+</div>
+
+<!-- 主な特徴 -->
+<div id="panel-features" class="panel">
+  <h2>主な特徴</h2>
+
+  <h3>① レビュー体制の強化（Phase 1c・1d）</h3>
+  <p>Phase 1b の整合性チェック後に2段階のレビューを実施します。</p>
+  <table>
+    <tr><th>フェーズ</th><th>レビュアー</th><th>主な確認観点</th><th>備考</th></tr>
+    <tr><td>Phase 1c</td><td>定義したアクター自身</td><td>行動の自然さ・目的との対応・抜け漏れ</td><td>必須</td></tr>
+    <tr><td>Phase 1d</td><td>5専門家ペルソナ</td><td>PM/UX/ARCH/LEGAL/MKT 各視点の懸念</td><td>オプション・スキップ可</td></tr>
+  </table>
+  <p>Phase 1d の5ペルソナは起動時に選択できます。不要なペルソナは外せます。</p>
+  <table>
+    <tr><th>ペルソナ</th><th>略称</th><th>主な確認観点</th></tr>
+    <tr><td>📦 プロダクトマネージャー</td><td>PM</td><td>MVPスコープ・ロードマップ整合・ユーザー価値</td></tr>
+    <tr><td>👤 ユーザー代表</td><td>UX</td><td>オンボーディング・エラー時UX・初心者〜上級者の連続性</td></tr>
+    <tr><td>⚙️ 技術アーキテクト</td><td>ARCH</td><td>実現可能性・外部依存・将来拡張との矛盾</td></tr>
+    <tr><td>⚖️ 法務アドバイザー</td><td>LEGAL</td><td>プライバシー・著作権・年齢制限・UGCリスク</td></tr>
+    <tr><td>📣 マーケター</td><td>MKT</td><td>差別化・SNS拡散・収益化との整合</td></tr>
+  </table>
+
+  <h3>② Phase 1b の強化（AC品質評価）</h3>
+  <p>受け入れ基準（AC）を3つの軸で評価します。</p>
+  <table>
+    <tr><th>評価軸</th><th>内容</th></tr>
+    <tr><td>明確性</td><td>機能要件（誰が・何をしたら・何が起きるか）として記述されているか。非機能要件は対象外。</td></tr>
+    <tr><td>完全性</td><td>完全欠落・異常系欠落・複数操作欠落の3パターンを確認。仕様未確定は申し送りへ。</td></tr>
+    <tr><td>粒度（AC粒度）</td><td>横断比較で著しく粗いACを検出。具体化案を複数提示しユーザーが選択。</td></tr>
+  </table>
+
+  <h3>③ 強化版 Question フォーマット</h3>
+  <p>全フェーズ共通。背景・選択肢・影響を必ず明示し、回答者が判断しやすい構造にしています。</p>
+  <pre><code>[Question 番号]
+・問い   : 何を決める必要があるか（一文で）
+・背景   : なぜこれが未決定なのか、なぜ問題になりうるか
+・選択肢 : A案 / B案 /（不明な場合は「要調査」）
+・影響   : 未決定のままだと〇〇フェーズの〇〇が進められない
+[Answer 番号]</code></pre>
+
+  <h3>④ I/F 手戻り防止の連鎖（Phase 3〜6）</h3>
+  <p>事前確認の問いがフェーズをまたいで引き継がれます。未解決の Question が残っている限り次フェーズへ進みません。各フェーズの確認はSTEP A/Bの2段階（調査→一覧提示→判断→確定）で実施します。</p>
+  <table>
+    <tr><th>フェーズ</th><th>生成する引き継ぎ文書</th><th>主な確認内容</th></tr>
+    <tr><td>Phase 3</td><td><code>if_precheck.md</code></td><td>データ受け渡し・概念の異名・連携種別・エラー振る舞い</td></tr>
+    <tr><td>Phase 4</td><td><code>if_precheck_p4.md</code></td><td>例外系の扱い方針・順序制約・循環依存・PACT定義間の依存関係</td></tr>
+    <tr><td>Phase 5</td><td><code>pact_index.md</code>（未解決 Question 欄）</td><td>フィールド仕様・異常系3種・べき等性・バージョニング</td></tr>
+    <tr><td>Phase 6</td><td><code>domain_model_plan.md</code>（I/F確認セクション）</td><td>PACT接続コンポーネント・ACL担当・ドメインモデルの独立性</td></tr>
+  </table>
+
+  <h3>⑤ ナレッジログ（knowledge_log.md）</h3>
+  <p>各フェーズ完了時に <code>knowledge_log.md</code> への追記を義務化。セッションをまたいで知見が蓄積されます。</p>
+  <table>
+    <tr><th>フェーズ</th><th>追記内容の例</th></tr>
+    <tr><td>Phase 1</td><td>要件整理フレームワーク・優先度判断の根拠</td></tr>
+    <tr><td>Phase 1b</td><td>発見した整合性パターン・AC粒度の傾向</td></tr>
+    <tr><td>Phase 1c</td><td>アクター行動フローの抜け漏れパターン・目的とのズレの傾向</td></tr>
+    <tr><td>Phase 1d</td><td>法務・技術・マーケの観点で発見したリスクパターン（実施した場合）</td></tr>
+    <tr><td>Phase 2</td><td>画面構成パターン・UX上の発見・未決事項の判断根拠</td></tr>
+    <tr><td>Phase 3</td><td>ユニット分割の判断根拠・境界設計パターン</td></tr>
+    <tr><td>Phase 4</td><td>連携依存方向の判断根拠・循環依存の解消パターン</td></tr>
+    <tr><td>Phase 5</td><td>異常系設計パターン・べき等性の判断基準</td></tr>
+    <tr><td>Phase 6</td><td>コンポーネント責務分割パターン・ACL要否の判断基準</td></tr>
+  </table>
+</div>
+
+<!-- フェーズ詳細 -->
+<div id="panel-phases" class="panel">
+  <h2>フェーズ詳細</h2>
+
+  <h3>Phase 1 — ユーザーストーリー作成</h3>
+  <p>熟練PMの役割で7ステップの計画を立ててからユーザーストーリーを作成します。ST4開始前にAIがエピック数・想定ストーリー数をもとに粒度（[A]エピック単位 / [B]ストーリー単位 / [C]一括）を推奨。[C]一括を選ぶ場合はPhase 1bでの確認コスト増について事前に説明があります。</p>
+
+  <h3>Phase 1b — 整合性チェック</h3>
+  <p>Phase 1 と同じセッションで実施。まずSTEP 1で全体調査、STEP 2でカテゴリ別問題一覧（矛盾・用語・AC品質・AC粒度・網羅性・申し送り）を影響度・推奨付きで提示。STEP 2.5でAC粒度の問題がある場合は具体化案を複数提示。後工程への申し送りは <code>phase1b_handover.md</code> に保存。</p>
+
+  <h3>Phase 1c — アクターレビュー ★このプロンプト集の独自フェーズ</h3>
+  <p>Phase 1 ST2 で定義したアクターを1人ずつ順番にレビューします。各アクターについて「行動の自然さ・目的との対応・抜け漏れ」の3観点で確認。各アクターのレビュー前に前フェーズ（Phase 1b）との整合性確認を実施。</p>
+  <div class="alert alert-sky">
+    <div class="alert-title">💡 なぜアクターレビューが重要か</div>
+    <p>「ユーザーがこの操作を実際に行うか」「目的と合っているか」を設計着手前に確認することで、Phase 3以降でのユニット境界の設計根拠が明確になります。</p>
+  </div>
+
+  <h3>Phase 1d — 専門家ペルソナレビュー ★オプション</h3>
+  <p>起動時に5ペルソナの概要を提示し、使用するペルソナを選択します。「スキップ」でフェーズ全体をスキップできます。各ペルソナのレビュー前に前フェーズ（Phase 1c）との整合性確認を実施。</p>
+
+  <h3>Phase 2 — 画面モック作成</h3>
+  <p>STEP 0で3つの前提（作成物の種類・粒度・作業順序）を確認してから作業を開始します。フローチャート先行（[F]）を選んだ場合はSTEP 1aで網羅性チェック、STEP 1bで未決事項の精査（今決める/仮決めする/後回し可の3段階）を実施。<code>inception_summary.md</code> を参照して引き継ぎ事項を反映します。</p>
+
+  <h3>Phase 3 — Unit of Work 分割</h3>
+  <p>STEP 0で前工程成果物（inception_summary / actor_review / screen_flow）の影響項目を確認してから計画作成。各ユニットは概要（目的・主な責務・境界の根拠・他ユニットとの主な連携）→承認→ストーリー＋AC追記の2段階レビュー。I/F事前確認はSTEP A（要判断事項一覧提示）→STEP B（確定・保存）の2段階。</p>
+  <div class="alert alert-red">
+    <div class="alert-title">⚠️ if_precheck.md の全 Question 回答前にクリアしない</div>
+    <p>Phase 4 以降のI/F設計はこのファイルを基盤にします。未解決のまま進むと Phase 5 での PACT 設計で大きな手戻りが発生します。</p>
+  </div>
+
+  <h3>Phase 4 — コンテキストマップ作成</h3>
+  <p>STEP 1でコンテキストマップ（Mermaid記法）＋連携一覧テーブルを作成・承認、STEP 2でシーケンス図を作成・承認、STEP 3でI/F事前確認を2段階で実施。STEP 1の整合性確認でPACT定義間の依存関係を3パターン（A:ユニット境界問題/B:依存方向問題/C:正当な依存）に識別。パターンA・Bは解消してからPhase 5へ進みます。</p>
+
+  <h3>Phase 5 — PACT 定義</h3>
+  <p>計画作成時にAIが着手順序を提案（未解決事項のない連携を優先、共有ユニットを含む連携を連続着手推奨）。各連携はSTEP A（I/F確認チェックリストを確定済み/未確定の一覧で提示→承認）→STEP B（PACT定義→整合性確認）の2段階。STEP Bの整合性確認ではユニットの「主な責務」の範囲内かも確認。</p>
+
+  <h3>Phase 6 — ドメインモデリング</h3>
+  <p>STEP A（I/F確認：PACTとの接続点・ACL要否・独立性を一覧提示）→STEP B（計画作成）→STEP C（コンポーネント定義）の3段階。関連する全PACTファイル（pact_xxx.md）を参照。ACL担当コンポーネントの明示を計画・定義の両段階で確認。ユニットごとに繰り返し実行し、1ユニット完了ごとにセッションをクリアします。</p>
+  <table>
+    <tr><th>実装順序</th><th>内容</th></tr>
+    <tr><td>①</td><td>ドメインモデリング（Phase 6）</td></tr>
+    <tr><td>②</td><td>ビジネスロジック実装</td></tr>
+    <tr><td>③</td><td>クラウドリソース選定</td></tr>
+    <tr><td>④</td><td>デプロイ</td></tr>
+  </table>
+</div>
+
+<!-- 共通変数 -->
+<div id="panel-variables" class="panel">
+  <h2>共通変数一覧</h2>
+  <p>各フェーズのプロンプトで使う変数です。<code>{{変数名}}</code> の部分を実際の値に置き換えてください。</p>
+  <table>
+    <tr><th>変数</th><th>説明</th><th>例</th></tr>
+    <tr><td><code>{{言語}}</code></td><td>出力言語</td><td>日本語</td></tr>
+    <tr><td><code>{{ドキュメントルート}}</code></td><td>成果物の保存先ルートパス</td><td>project-docs</td></tr>
+    <tr><td><code>{{構築したいシステムの概要}}</code></td><td>プロジェクトの説明（背景・目的を含めると Question が減る）</td><td>「〇〇なシステムを作りたい」</td></tr>
+    <tr><td><code>{{対象ユニットのmdファイル名}}</code></td><td>Phase 6 で参照するユニットファイル名</td><td>unit_01_browsing.md</td></tr>
+    <tr><td><code>&lt;ユニット名&gt;</code></td><td>Phase 6 の出力先フォルダ名</td><td>unit_01_browsing</td></tr>
+  </table>
+
+  <h3>成果物の保存先構造</h3>
+  <pre><code>{{ドキュメントルート}}/
+├── inception/
+│   ├── user_stories_plan.md
+│   ├── user_stories.md
+│   ├── consistency_check.md        ← Phase 1b 整合性確認レポート
+│   ├── phase1b_handover.md         ← Phase 1b 後工程への申し送り
+│   ├── actor_review.md             ← Phase 1c アクターレビュー
+│   ├── multi_perspective_review.md ← Phase 1d 専門家ペルソナ（オプション）
+│   ├── inception_summary.md        ← ナビゲーターが生成（Phase 2 への引き継ぎ）
+│   ├── screen_flow.md              ← Phase 2 フローチャート（[F]選択時のみ）
+│   ├── screen_mock.html            ← Phase 2 画面モック
+│   ├── context_map.md              ← Phase 4（連携一覧テーブル含む）
+│   ├── if_precheck_p4.md           ← Phase 4 I/F事前確認
+│   ├── units/
+│   │   ├── units_plan.md
+│   │   ├── unit_01_&lt;名前&gt;.md      ← ユニット概要・目的・境界の根拠を含む
+│   │   ├── unit_02_&lt;名前&gt;.md
+│   │   └── if_precheck.md         ← Phase 3 I/F事前確認
+│   └── pacts/
+│       ├── pact_&lt;consumer&gt;_&lt;provider&gt;.md
+│       └── pact_index.md
+├── construction/
+│   └── &lt;ユニット名&gt;/
+│       ├── domain_model_plan.md    ← I/F確認セクション含む
+│       └── docs/
+│           └── &lt;コンポーネント名&gt;.md
+└── knowledge_log.md                ← 全フェーズで追記</code></pre>
+</div>
+
+<!-- 運用のコツ -->
+<div id="panel-tips" class="panel">
+  <h2>運用のコツ</h2>
+
+  <h3>効果的なAIへの指示</h3>
+  <table>
+    <tr><th>シーン</th><th>指示の例</th><th>効果</th></tr>
+    <tr><td>生成物の品質確認</td><td>「整合性確認レポートを提示してください」</td><td>AIが自己チェックして問題を発見・修正してからレビューを求める</td></tr>
+    <tr><td>Question の記録</td><td>（フォーマット通りに記載される）</td><td>問い・背景・選択肢・影響が明示され判断しやすい</td></tr>
+    <tr><td>段階的な実行</td><td>「続けてください」</td><td>1ステップずつレビューしながら進められる</td></tr>
+    <tr><td>フェーズ再開</td><td>保存済み md ファイルを貼り付けて「〇〇フェーズの△ステップから再開」</td><td>どのステップからでも再開可能</td></tr>
+  </table>
+
+  <h3>トークンを節約するコツ</h3>
+  <ul>
+    <li>フェーズ完了後は必ずセッションクリアする</li>
+    <li>インセプションとコンストラクションでナビゲーターを使い分ける</li>
+    <li>Phase 6 は 1ユニット = 1セッション を原則にする</li>
+    <li>不要なファイルを読み込ませない（必要なフェーズの md のみ参照）</li>
+    <li>Phase 1d（専門家ペルソナ）は必要なペルソナだけを選択する</li>
+  </ul>
+
+  <h3>前のフェーズへ戻る方法</h3>
+  <p>各フェーズの成果物ファイルが手元にあれば、任意のフェーズから再開できます。新しいセッションを開き、対応するフェーズのプロンプトと保存済みファイルの内容を貼り付けて開始してください。</p>
+  <table>
+    <tr><th>戻りたいフェーズ</th><th>必要な成果物</th></tr>
+    <tr><td>Phase 1 の途中</td><td><code>user_stories_plan.md</code>（チェック状態）+ <code>user_stories.md</code></td></tr>
+    <tr><td>Phase 1b</td><td><code>user_stories.md</code>（Phase 1 完成版）</td></tr>
+    <tr><td>Phase 1c</td><td><code>user_stories.md</code> + <code>consistency_check.md</code> + <code>phase1b_handover.md</code></td></tr>
+    <tr><td>Phase 1d</td><td><code>user_stories.md</code> + <code>actor_review.md</code></td></tr>
+    <tr><td>Phase 2</td><td><code>inception_summary.md</code></td></tr>
+    <tr><td>Phase 3</td><td><code>user_stories.md</code> + <code>units_plan.md</code> + 完成済み <code>unit_XX.md</code></td></tr>
+    <tr><td>Phase 4</td><td><code>unit_XX.md</code> 群 + <code>if_precheck.md</code></td></tr>
+    <tr><td>Phase 5</td><td><code>context_map.md</code> + <code>if_precheck_p4.md</code> + <code>unit_XX.md</code> 群</td></tr>
+    <tr><td>Phase 6 の途中</td><td>対象 <code>unit_XX.md</code> + <code>pact_index.md</code> + <code>domain_model_plan.md</code></td></tr>
+  </table>
+
+  <h3>ナレッジログを活かす</h3>
+  <p>プロジェクト完了後、<code>knowledge_log.md</code> に蓄積された知見を <code>knowledge.md</code> に転記して git push してください。次のプロジェクトからナビゲーターが自動で読み込み、同じ失敗を繰り返しません。</p>
+</div>
+
+<!-- ファイル一覧 -->
+<div id="panel-files" class="panel">
+  <h2>ファイル一覧（完全版）</h2>
+  <table>
+    <tr><th>ファイル</th><th>種別</th><th>読み込みタイミング</th></tr>
+    <tr><td><code>knowledge.md</code></td><td>ナレッジ</td><td>全ナビゲーター起動時（自動）</td></tr>
+    <tr><td><code>00_README.md</code></td><td>ガイド</td><td>全ナビゲーター起動時（自動）</td></tr>
+    <tr><td><code>01_generate_user_stories_plan.md</code></td><td>Phase 1</td><td>Phase 1 開始時</td></tr>
+    <tr><td><code>01b_check_user_stories_consistency.md</code></td><td>Phase 1b</td><td>Phase 1b 開始時（Phase 1 と同セッション）</td></tr>
+    <tr><td><code>01c_actor_review.md</code></td><td>Phase 1c ★新設</td><td>Phase 1c 開始時（Phase 1b と同セッション）</td></tr>
+    <tr><td><code>01c_multi_perspective_review.md</code></td><td>旧Phase 1c（参照用）</td><td>—（旧バージョン参照用。通常は使用しない）</td></tr>
+    <tr><td><code>01d_multi_perspective_review.md</code></td><td>Phase 1d ★オプション</td><td>Phase 1d 開始時（スキップ可）</td></tr>
+    <tr><td><code>02_generate_screen_mock.md</code></td><td>Phase 2</td><td>Phase 2 開始時</td></tr>
+    <tr><td><code>03_generate_unit_of_work.md</code></td><td>Phase 3</td><td>Phase 3 開始時</td></tr>
+    <tr><td><code>04_generate_context_map.md</code></td><td>Phase 4</td><td>Phase 4 開始時</td></tr>
+    <tr><td><code>05_generate_pact.md</code></td><td>Phase 5</td><td>Phase 5 開始時</td></tr>
+    <tr><td><code>06_generate_domain_model.md</code></td><td>Phase 6</td><td>Phase 6 開始時（ユニットごとに繰り返し）</td></tr>
+    <tr><td><code>navigator_inception.md</code></td><td>ナビゲーター</td><td>インセプションフェーズ開始時に入力</td></tr>
+    <tr><td><code>navigator_construction.md</code></td><td>ナビゲーター</td><td>コンストラクションフェーズ開始時に入力</td></tr>
+    <tr><td><code>navigator_prompt.md</code></td><td>ナビゲーター</td><td>全フェーズ通しで進める場合に入力</td></tr>
+    <tr><td><code>manual.html</code></td><td>マニュアル</td><td>ブラウザで開いて参照</td></tr>
+  </table>
+
+  <div class="alert alert-green">
+    <div class="alert-title">✅ ★ マークのファイルはこのプロンプト集の独自追加・変更</div>
+    <p>Phase 1c（アクターレビュー）新設・Phase 1d（旧 1c をオプション化しペルソナ選択可に変更）・inception_summary.md の自動生成・各フェーズのSTEP構造化・I/F確認の2段階化はこのプロンプト集の独自強化です。</p>
+  </div>
+</div>
+
+</div><!-- .content -->
+
+<footer>
+  ソフトウェア開発プロンプト集 使い方マニュアル — 2026.06.18
+</footer>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
