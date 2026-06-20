@@ -42,6 +42,8 @@ Phase 0（要件の具体化）からPhase 6（ドメインモデリング）ま
 | フェーズ | 内容 | 参照ファイル | セクション |
 |---|---|---|---|
 | Phase 0 | 要件の具体化・明確化 | `00_grill_me.md` | インセプション |
+| Phase 0b | ゴールライン定義（PRFAQ・コアジャーニー） | `00b_goal_line_prfaq.md` | インセプション |
+| Phase 0c | デザインプリンシプル定義 | `00c_design_principles.md` | インセプション |
 | Phase 1 | ユーザーストーリー作成（粒度A/B/C選択） | `01_generate_user_stories_plan.md` | インセプション |
 | Phase 1b | 整合性チェック | `01b_check_user_stories_consistency.md` | インセプション |
 | Phase 1c | アクターレビュー | `01c_actor_review.md` | インセプション |

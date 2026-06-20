@@ -19,8 +19,8 @@ Phase 0〜3（要件の具体化 〜 Unit of Work 分割）を進める際に使
 
 - 現在どのフェーズにいるかを把握し、次に何をすべきかを私に問いかけてください
 - 開発を始める場合は必ず Phase 0（要件の具体化・明確化）から始めるよう案内してください
-- インセプションフェーズは Phase 0 → 1 → 1b → 1c → 1d → 2 → 3 の順に進めます
-- Phase 0 は単独のセッションで実施し、完了後にセッションクリアしてから Phase 1 へ進みます
+- インセプションフェーズは Phase 0 → 0b → 0c → 1 → 1b → 1c → 1d → 2 → 3 の順に進めます
+- Phase 0・0b・0c は同じセッションで続けて実施し、完了後にセッションクリアしてから Phase 1 へ進みます
 - Phase 1・1b・1c は同じセッションで続けて実施します
 - Phase 1 の ST4 開始前に、エピック数・想定ストーリー数を提示し、
   レビュー粒度（[A] エピック単位 / [B] ストーリー単位 / [C] 一括）を推奨とともに私に提案してください
@@ -37,6 +37,8 @@ Phase 0〜3（要件の具体化 〜 Unit of Work 分割）を進める際に使
 - 各フェーズ完了時は knowledge_log.md への追記を忘れずに案内してください
 - 独自の判断や決定は行わず、不明な点は必ず私に確認してください
 - 成果物はすべて {{ドキュメントルート}}/inception/ フォルダに保存してください
+- 判断に迷う場面（優先順位の対立など）が発生した場合は、inception/design_principles.md
+  （Phase 0c 成果物）を参照して判断してください
 - 以下のファイルを各フェーズ開始時に確認してください：
     Phase 1c 開始時: inception/consistency_check.md と inception/phase1b_handover.md（Phase 1b 成果物）
     Phase 1d 開始時: inception/actor_review.md（Phase 1c 成果物）
@@ -153,6 +155,8 @@ Phase 0〜3（要件の具体化 〜 Unit of Work 分割）を進める際に使
 | フェーズ | 内容 | 参照ファイル | セッション |
 |---|---|---|---|
 | Phase 0 | 要件の具体化・明確化 | `00_grill_me.md` | セッション 0 |
+| Phase 0b | ゴールライン定義（PRFAQ・コアジャーニー） | `00b_goal_line_prfaq.md` | セッション 0（継続） |
+| Phase 0c | デザインプリンシプル定義 | `00c_design_principles.md` | セッション 0（継続） |
 | Phase 1 | ユーザーストーリー作成（粒度A/B/C選択） | `01_generate_user_stories_plan.md` | セッション A |
 | Phase 1b | 整合性チェック | `01b_check_user_stories_consistency.md` | セッション A（継続） |
 | Phase 1c | アクターレビュー | `01c_actor_review.md` | セッション A（継続） |
@@ -165,8 +169,8 @@ Phase 0〜3（要件の具体化 〜 Unit of Work 分割）を進める際に使
 ## セッションクリアのタイミング
 
 ```
-Phase 0                          [セッション 0]
-                                  ↓ 要件確定 → セッションクリア
+Phase 0 → Phase 0b → Phase 0c     [セッション 0]
+                                  ↓ デザインプリンシプル確定 → セッションクリア
 Phase 1 → Phase 1b → Phase 1c  [同一セッションで実施]
                                   ↓ 全 Question 回答済み → セッションクリア
 Phase 1d（オプション）            [セッション A 継続 または B]
