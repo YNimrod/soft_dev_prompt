@@ -39,6 +39,10 @@ Phase 0〜3（要件の具体化 〜 Unit of Work 分割）を進める際に使
 - 成果物はすべて {{ドキュメントルート}}/inception/ フォルダに保存してください
 - 判断に迷う場面（優先順位の対立など）が発生した場合は、inception/design_principles.md
   （Phase 0c 成果物）を参照して判断してください
+- 各フェーズの整合性確認は、00_README.md の「整合性確認のスコープ原則」に従ってください
+  （原則: 直前フェーズの成果物が対象。Phase 1のサブフェーズ（1/1b/1c/1d）はPhase 1全体を
+  1単位として扱う。状況に応じてスコープを広げ、古い成果物との矛盾を見つけたら
+  指示を待たずに指摘・更新してください）
 - 以下のファイルを各フェーズ開始時に確認してください：
     Phase 1c 開始時: inception/consistency_check.md と inception/phase1b_handover.md（Phase 1b 成果物）
     Phase 1d 開始時: inception/actor_review.md（Phase 1c 成果物）
